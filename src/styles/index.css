@@ -75,3 +75,6 @@
 .iconzuojiantou:before {
   content: "\e615";
 }
+body {
+  background-color: #f2f3f5;
+}

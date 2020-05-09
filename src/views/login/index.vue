@@ -3,7 +3,7 @@
 <van-nav-bar
   title="登录/注册"
   left-arrow
-  @click-left="onClickLeft"
+  @click-left="$router.back()"
 />
 
 <van-cell-group>
@@ -11,7 +11,7 @@
     v-model="mobile"
     label="文本"
     icon-prefix="iconfont"
-    left-icon="icondianzan"
+    left-icon="iconshouji"
     placeholder="请输入手机号"
   />
   <van-field
@@ -66,6 +66,15 @@ export default {
 </script>
 
 <style lang='less' scoped>
+.van-nav-bar {
+  background-color: #1989fa;
+    // .van-icon {
+    //   color: #f2f3f5 !important;
+    // } 不管用
+    /deep/ .van-icon {
+      color: #f2f3f5;
+    }
+}
 .van-field__button {
   .send-btn {
     background-color: #ccc;
@@ -80,6 +89,7 @@ export default {
   .van-button {
     // background-color: rgb(22, 87, 87);
     border: none;
+    font-size: 11px;
   }
 }
 </style>
