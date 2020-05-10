@@ -6,9 +6,10 @@
   @click-left="$router.back()"
 />
 
-<van-form @submit="onLogin" :show-error="false" :show-error-message="false" @failed="onFailed" validate-first>
+<van-form @submit="onLogin" :show-error="false" :show-error-message="false" @failed="onFailed" validate-first ref="loginForm">
   <van-field
     v-model="user.mobile"
+    name="mobile"
     label="文本"
     icon-prefix="iconfont"
     left-icon="iconshouji"
@@ -25,7 +26,9 @@
     :rules="rules.code"
   >
     <template #button>
-      <van-button size="small" class="send-btn">发送验证码</van-button>
+      <!-- if-else结构 -->
+      <van-count-down millisecond :time="1000 * 5" format="ss s" v-if="isCountDown" @finish="isCountDown = false"/>
+      <van-button size="small" class="send-btn" @click.prevent="onSendMsg" v-else :loading="isSendmsgLoding">发送验证码</van-button>
     </template>
 </van-field>
   <div class="onLogin">
@@ -36,7 +39,7 @@
 </template>
 
 <script>
-import { login } from '@/api/user'
+import { login, sendSms } from '@/api/user'
 // 需要另外加载
 import { Toast } from 'vant'
 export default {
@@ -58,7 +61,9 @@ export default {
           { required: true, message: '请填写验证码' },
           { pattern: /\d{6}/, message: '验证码错误' }
         ]
-      }
+      },
+      isCountDown: false,
+      isSendmsgLoding: false
     }
   },
   computed: {},
@@ -90,6 +95,42 @@ export default {
       } catch {
         Toast.fail('登录失败')
       }
+    },
+    // 请求发送验证
+    async onSendMsg () {
+      this.isSendmsgLoding = true
+      let message = ''
+      // 校验手机号->
+      try {
+        await this.$refs.loginForm.validate('mobile')
+        const res = await sendSms(this.user.mobile)
+        console.log(res)
+        // 隐藏按钮进入倒计时
+        this.isCountDown = true
+      } catch (err) {
+        console.log(err)
+        // if (err.message === '手机号格式错误') {
+        if (err.name === 'mobile') {
+          message = err.message
+          // Toast({
+          //   message: err.message,
+          //   position: 'top'
+          // })
+        } else if (err.response.status === 429) {
+          message = err.response.data.message
+          // Toast({
+          //   message: err.response.data.message,
+          //   position: 'top'
+          // })
+        } else {
+          message = '未知错误'
+        }
+      }
+      Toast({
+        message,
+        position: 'top'
+      })
+      this.isSendmsgLoding = false
     }
   },
   mounted () {},
