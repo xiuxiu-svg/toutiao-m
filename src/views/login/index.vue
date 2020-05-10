@@ -6,58 +6,90 @@
   @click-left="$router.back()"
 />
 
-<van-cell-group>
+<van-form @submit="onLogin" :show-error="false" :show-error-message="false" @failed="onFailed" validate-first>
   <van-field
-    v-model="mobile"
+    v-model="user.mobile"
     label="文本"
     icon-prefix="iconfont"
     left-icon="iconshouji"
     placeholder="请输入手机号"
+    :rules="rules.mobile"
   />
   <van-field
-    v-model="code"
+    v-model="user.code"
     clearable
     label="文本"
     icon-prefix="iconfont"
     left-icon="icondianzan"
     placeholder="请输入验证码"
+    :rules="rules.code"
   >
     <template #button>
       <van-button size="small" class="send-btn">发送验证码</van-button>
     </template>
 </van-field>
-</van-cell-group>
-<div class="onLogin">
-  <van-button type="info" block @click="onLogin">登录</van-button>
+  <div class="onLogin">
+  <van-button type="info" block>登录</van-button>
 </div>
+</van-form>
 </div>
 </template>
 
 <script>
 import { login } from '@/api/user'
+// 需要另外加载
+import { Toast } from 'vant'
 export default {
   name: 'Login',
   props: {},
   components: {},
   data () {
     return {
-      mobile: '13911111111',
-      code: '246810'
+      user: {
+        mobile: '13911111111',
+        code: '246810'
+      },
+      rules: {
+        mobile: [
+          { required: true, message: '请填写手机号' },
+          { pattern: /^1[3,5,7,8]\d{9}$/, message: '手机号格式错误' }
+        ],
+        code: [
+          { required: true, message: '请填写验证码' },
+          { pattern: /\d{6}/, message: '验证码错误' }
+        ]
+      }
     }
   },
   computed: {},
   watch: {},
   created () {},
   methods: {
-    onClickLeft () {
-
+    onFailed (errInfo) {
+      // console.log(errInfo)
+      const errMessage = errInfo.errors[0].message
+      Toast({
+        message: errMessage,
+        position: 'top'
+      })
+      // Toast.position = 'top'
     },
     async onLogin () {
-      const res = await login({
-        mobile: this.mobile,
-        code: this.code
+      Toast.loading({
+        message: '登录中...',
+        forbidClick: true,
+        duration: 0
       })
-      console.log(res)
+      try {
+        const res = await login({
+          mobile: this.user.mobile,
+          code: this.user.code
+        })
+        console.log(res)
+        Toast.success('登录成功')
+      } catch {
+        Toast.fail('登录失败')
+      }
     }
   },
   mounted () {},
@@ -71,6 +103,9 @@ export default {
     // .van-icon {
     //   color: #f2f3f5 !important;
     // } 不管用
+    // .van-icon {
+    //   color: #f2f3f5;
+    // }
     /deep/ .van-icon {
       color: #f2f3f5;
     }
