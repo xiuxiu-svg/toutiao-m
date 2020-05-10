@@ -6,22 +6,26 @@
   @click-left="$router.back()"
 />
 
-<van-form @submit="onLogin" :show-error="false" :show-error-message="false" @failed="onFailed" validate-first ref="loginForm">
+<van-form
+  @submit="onLogin"
+  :show-error="false"
+  :show-error-message="false"
+  @failed="onFailed"
+  validate-first
+  ref="loginForm">
   <van-field
     v-model="user.mobile"
     name="mobile"
-    label="文本"
-    icon-prefix="iconfont"
-    left-icon="iconshouji"
+    icon-prefix="icon"
+    left-icon="shouji"
     placeholder="请输入手机号"
     :rules="rules.mobile"
   />
   <van-field
     v-model="user.code"
     clearable
-    label="文本"
-    icon-prefix="iconfont"
-    left-icon="icondianzan"
+    icon-prefix="icon"
+    left-icon="yanzhengma"
     placeholder="请输入验证码"
     :rules="rules.code"
   >
@@ -86,12 +90,10 @@ export default {
         duration: 0
       })
       try {
-        const res = await login({
-          mobile: this.user.mobile,
-          code: this.user.code
-        })
-        console.log(res)
+        const { data } = await login(this.user)
+        console.log(data)
         Toast.success('登录成功')
+        this.$store.commit('userToken', data.data)
       } catch {
         Toast.fail('登录失败')
       }
