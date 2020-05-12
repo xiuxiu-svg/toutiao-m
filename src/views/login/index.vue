@@ -94,6 +94,7 @@ export default {
         console.log(data)
         Toast.success('登录成功')
         this.$store.commit('userToken', data.data)
+        this.$router.back()
       } catch {
         Toast.fail('登录失败')
       }
