@@ -7,13 +7,11 @@
       class="avatar"
       slot="icon"
       round
-      width="50"
-      height="50"
       fit="cover"
       src="https://img.yzcdn.cn/vant/cat.jpeg"
     />
     <div slot="title">昵称</div>
-    <van-button type="info" round>修改资料</van-button>
+    <van-button type="info" round class="update-btn">修改资料</van-button>
   </van-cell>
 <!-- 第二行-->
 <van-grid :border="false">
@@ -95,14 +93,25 @@ export default {
       border: 1px solid #fff;
       margin-right: 11px;
     }
+    .update-btn {
+      height: 16px;
+      color: #666;
+      font-size: 10px;
+    }
   }
   .van-grid-item__content {
     background-color: unset;
     font-size: 14px;
     color: #fff;
     height: 65px;
-    .count {
+    .text-wrap {
+      text-align: center;
+      .count {
       font-size: 18px;
+      }
+      .text {
+        font-size: 11px;
+      }
     }
   }
 }
