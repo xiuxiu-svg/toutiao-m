@@ -8,34 +8,34 @@
       slot="icon"
       round
       fit="cover"
-      src="https://img.yzcdn.cn/vant/cat.jpeg"
+      :src="user.photo"
     />
-    <div slot="title">昵称</div>
+    <div slot="title">{{ user.name }}</div>
     <van-button type="info" round class="update-btn">修改资料</van-button>
   </van-cell>
 <!-- 第二行-->
 <van-grid :border="false">
   <van-grid-item>
     <div slot="text" class="text-wrap">
-      <div class="count">123</div>
+      <div class="count">{{ user.art_count }}</div>
       <div class="text">头条</div>
     </div>
   </van-grid-item>
   <van-grid-item>
     <div slot="text" class="text-wrap">
-      <div class="count">123</div>
+      <div class="count">{{ user.follow_count }}</div>
       <div class="text">关注</div>
     </div>
   </van-grid-item>
   <van-grid-item>
     <div slot="text" class="text-wrap">
-      <div class="count">123</div>
+      <div class="count">{{ user.fans_count }}</div>
       <div class="text">粉丝</div>
     </div>
   </van-grid-item>
   <van-grid-item>
     <div slot="text" class="text-wrap">
-      <div class="count">123</div>
+      <div class="count">{{ user.like_count }}</div>
       <div class="text">获赞</div>
     </div>
   </van-grid-item>
@@ -60,6 +60,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { getCurrentUser } from '@/api/user'
 // import { Dialog } from 'vant'
 // Vue.use(Dialog)
 
@@ -68,14 +69,21 @@ export default {
   props: {},
   components: {},
   data () {
-    return {}
+    return {
+      user: {}
+    }
   },
   computed: {
     ...mapState(['user'])
   },
   watch: {},
-  created () {},
+  created () {
+    if (this.$store.state.user) {
+      this.loadCurrentUser()
+    }
+  },
   methods: {
+    // 退出功能
     onLogout () {
       this.$dialog.confirm({
         title: '退出提示',
@@ -88,6 +96,11 @@ export default {
         .catch(() => {
           // on cancel
         })
+    },
+    // 获取用户信息
+    async loadCurrentUser () {
+      const { data } = await getCurrentUser()
+      this.user = data.data
     }
   },
   mounted () {},
