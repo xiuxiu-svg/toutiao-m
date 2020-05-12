@@ -8,34 +8,34 @@
       slot="icon"
       round
       fit="cover"
-      :src="user.photo"
+      :src="currentUser.photo"
     />
-    <div slot="title">{{ user.name }}</div>
+    <div slot="title">{{ currentUser.name }}</div>
     <van-button type="info" round class="update-btn">修改资料</van-button>
   </van-cell>
 <!-- 第二行-->
 <van-grid :border="false">
   <van-grid-item>
     <div slot="text" class="text-wrap">
-      <div class="count">{{ user.art_count }}</div>
+      <div class="count">{{ currentUser.art_count }}</div>
       <div class="text">头条</div>
     </div>
   </van-grid-item>
   <van-grid-item>
     <div slot="text" class="text-wrap">
-      <div class="count">{{ user.follow_count }}</div>
+      <div class="count">{{ currentUser.follow_count }}</div>
       <div class="text">关注</div>
     </div>
   </van-grid-item>
   <van-grid-item>
     <div slot="text" class="text-wrap">
-      <div class="count">{{ user.fans_count }}</div>
+      <div class="count">{{ currentUser.fans_count }}</div>
       <div class="text">粉丝</div>
     </div>
   </van-grid-item>
   <van-grid-item>
     <div slot="text" class="text-wrap">
-      <div class="count">{{ user.like_count }}</div>
+      <div class="count">{{ currentUser.like_count }}</div>
       <div class="text">获赞</div>
     </div>
   </van-grid-item>
@@ -70,7 +70,7 @@ export default {
   components: {},
   data () {
     return {
-      user: {}
+      currentUser: {}
     }
   },
   computed: {
@@ -100,7 +100,7 @@ export default {
     // 获取用户信息
     async loadCurrentUser () {
       const { data } = await getCurrentUser()
-      this.user = data.data
+      this.currentUser = data.data
     }
   },
   mounted () {},
