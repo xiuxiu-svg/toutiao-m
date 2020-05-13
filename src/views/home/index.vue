@@ -1,26 +1,47 @@
 <template>
 <div class="home-container">
+  <!-- 导航栏 -->
 <van-cell value="内容" class="nav-top">
   <template #default>
     <div class="logo"></div>
     <van-button type="default" round class="search-btn" icon="search">搜索</van-button>
   </template>
 </van-cell>
+<!-- /导航栏 -->
+
+<!-- 滑动切换 -->
+<van-tabs v-model="active" swipeable>
+  <van-tab title="1">
+    内容1
+  </van-tab>
+</van-tabs>
+<!-- /滑动切换 -->
 </div>
 </template>
 
 <script>
+import { getchannels } from '@/api/user'
 export default {
   name: 'Home',
   props: {},
   components: {},
   data () {
-    return {}
+    return {
+      active: 0,
+      channels: []
+    }
   },
   computed: {},
   watch: {},
-  created () {},
-  methods: {},
+  created () {
+    this.loadChannels()
+  },
+  methods: {
+    async loadChannels () {
+      const { data: { data } } = await getchannels()
+      this.channels = data.channels
+    }
+  },
   mounted () {},
   beforeDestroy () {}
 }
