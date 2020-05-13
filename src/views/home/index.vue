@@ -12,7 +12,7 @@
 <!-- 滑动切换 -->
 <van-tabs v-model="active" swipeable>
   <van-tab v-for="channel in channels" :key="channel.id" :title="channel.name">
-    {{ channel.name }}
+
     <article-list :channel="channel"/>
   </van-tab>
 </van-tabs>
