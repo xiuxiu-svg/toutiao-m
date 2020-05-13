@@ -1,5 +1,11 @@
 <template>
 <div class="articleList-container">
+<!-- 下拉刷新 -->
+<van-pull-refresh
+  v-model="isLoading"
+  :success-text="succesText"
+  @refresh="onRefreshArticles"
+>
 <van-list
   v-model="loading"
   :finished="finished"
@@ -8,6 +14,7 @@
 >
   <van-cell v-for="(article, index) in articles" :key="index" :title="article.title" />
 </van-list>
+</van-pull-refresh>
 </div>
 </template>
 
@@ -27,7 +34,9 @@ export default {
       articles: [],
       loading: false,
       finished: false,
-      timestamp: null
+      timestamp: null,
+      succesText: '',
+      isLoading: false
     }
   },
   computed: {},
@@ -51,7 +60,23 @@ export default {
       if (results.length) {
         this.timestamp = data.data.pre_timestamp
       } else {
-        // this.finished = true
+        this.finished = true
+      }
+    },
+    async onRefreshArticles () {
+      try {
+        const { data } = await getArticles({
+          channel_id: this.channel.id,
+          timestamp: Date.now(),
+          with_top: 1
+        })
+        const { results } = data.data
+        console.log(results)
+        this.articles.unshift(...results)
+        this.isLoading = false
+        this.succesText = '刷新成功'
+      } catch (err) {
+        this.succesText = '刷新失败'
       }
     }
   },
