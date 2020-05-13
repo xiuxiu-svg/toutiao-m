@@ -11,8 +11,9 @@
 
 <!-- 滑动切换 -->
 <van-tabs v-model="active" swipeable>
-  <van-tab title="1">
-    内容1
+  <van-tab v-for="channel in channels" :key="channel.id" :title="channel.name">
+    {{ channel.name }}
+    <article-list :channel="channel"/>
   </van-tab>
 </van-tabs>
 <!-- /滑动切换 -->
@@ -21,10 +22,14 @@
 
 <script>
 import { getchannels } from '@/api/user'
+import articleList from './components/articleList'
+
 export default {
   name: 'Home',
   props: {},
-  components: {},
+  components: {
+    articleList
+  },
   data () {
     return {
       active: 0,
