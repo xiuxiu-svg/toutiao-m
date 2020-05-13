@@ -2,17 +2,24 @@
 <div class="articleList-container">
 <!-- 下拉刷新 -->
 <van-pull-refresh
-  v-model="isLoading"
+  v-model="isRefreshLoading"
   :success-text="succesText"
+  :success-duration="1500"
   @refresh="onRefreshArticles"
 >
 <van-list
   v-model="loading"
   :finished="finished"
   finished-text="没有更多了"
+  :succesText="succesText"
   @load="onLoad"
 >
-  <van-cell v-for="(article, index) in articles" :key="index" :title="article.title" />
+  <!-- <van-cell v-for="(article, index) in articles" :key="index" :title="article.title" /> -->
+  <article-item
+    v-for="(article, index) in articles"
+    :key="index"
+    :article="article"
+  />
 </van-list>
 </van-pull-refresh>
 </div>
@@ -20,6 +27,7 @@
 
 <script>
 import { getArticles } from '@/api/article'
+import ArticleItem from '@/components/article-item'
 export default {
   name: 'articleList',
   props: {
@@ -28,7 +36,9 @@ export default {
       required: true
     }
   },
-  components: {},
+  components: {
+    ArticleItem
+  },
   data () {
     return {
       articles: [],
@@ -36,7 +46,7 @@ export default {
       finished: false,
       timestamp: null,
       succesText: '',
-      isLoading: false
+      isRefreshLoading: false
     }
   },
   computed: {},
@@ -50,13 +60,13 @@ export default {
       const { data } = await getArticles({
         channel_id: this.channel.id,
         timestamp: this.timestamp || Date.now(),
-        with_top: 1
+        with_top: 0
       })
       console.log(data)
       // this.articles = data.data.results
       const { results } = data.data
       this.articles.push(...results)
-      this.loading = false
+      this.isRefreshLoading = false
       if (results.length) {
         this.timestamp = data.data.pre_timestamp
       } else {
@@ -71,9 +81,8 @@ export default {
           with_top: 1
         })
         const { results } = data.data
-        console.log(results)
         this.articles.unshift(...results)
-        this.isLoading = false
+        this.isRefreshLoading = false
         this.succesText = '刷新成功'
       } catch (err) {
         this.succesText = '刷新失败'

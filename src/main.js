@@ -11,6 +11,7 @@ import './styles/index.less'
 
 // 设置rem基准值 字体大小
 import 'amfe-flexible'
+import './utils/dayjs'
 // 关闭生产提示
 Vue.config.productionTip = false
 
