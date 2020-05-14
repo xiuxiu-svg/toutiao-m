@@ -17,6 +17,16 @@
   </van-tab>
 </van-tabs>
 <!-- /滑动切换 -->
+<!-- 弹出层 -->
+<van-popup
+  class="channel-edit-popup"
+  v-model="isChannelEditShow"
+  position="bottom"
+  closeable
+  close-icon-position="top-left"
+  get-container="body"
+  :style="{ height: '100%' }"
+/>
 </div>
 </template>
 
@@ -33,7 +43,8 @@ export default {
   data () {
     return {
       active: 0,
-      channels: []
+      channels: [],
+      isChannelEditShow: false
     }
   },
   computed: {},
@@ -42,6 +53,9 @@ export default {
     this.loadChannels()
   },
   methods: {
+    showPopup () {
+      this.show = true
+    },
     async loadChannels () {
       const { data: { data } } = await getchannels()
       this.channels = data.channels
@@ -75,5 +89,8 @@ export default {
     }
   }
 }
+// .channel-edit-popup {
+//   height: 100%;
+// }
 
 </style>
