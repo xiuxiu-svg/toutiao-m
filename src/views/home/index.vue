@@ -10,11 +10,19 @@
 <!-- /导航栏 -->
 
 <!-- 滑动切换 -->
-<van-tabs v-model="active" swipeable>
+<van-tabs v-model="active" swipeable class="channel-tabs">
   <van-tab v-for="channel in channels" :key="channel.id" :title="channel.name">
 
     <article-list :channel="channel"/>
   </van-tab>
+  <div class="zhanwei" slot="nav-right"></div>
+  <!-- 汉堡按钮 -->
+  <div slot="nav-right"
+  @click="isChannelEditShow=true"
+  class="showPopup"
+  >
+    <van-icon name="wap-nav" color="#1989fa" />
+  </div>
 </van-tabs>
 <!-- /滑动切换 -->
 <!-- 弹出层 -->
@@ -26,19 +34,23 @@
   close-icon-position="top-left"
   get-container="body"
   :style="{ height: '100%' }"
-/>
+>
+<channel-edit />
+</van-popup>
 </div>
 </template>
 
 <script>
 import { getchannels } from '@/api/user'
 import articleList from './components/articleList'
+import ChannelEdit from './components/channel-edit'
 
 export default {
   name: 'Home',
   props: {},
   components: {
-    articleList
+    articleList,
+    ChannelEdit
   },
   data () {
     return {
@@ -87,6 +99,25 @@ export default {
       height: 26px;
       border: unset;
     }
+  }
+  .channel-tabs {
+    /deep/ .van-tab {
+      border-right: 1px solid #edeff3;
+      border-bottom: 1px solid #edeff3;
+    }
+  }
+  .zhanwei {
+    width: 33px;
+    flex-shrink: 0;
+    // height: 18px;
+  }
+  .showPopup {
+    border-right: 1px solid #ccc;
+    position: fixed;
+    font-size: 22px;
+    top: 58px;
+    right: 0;
+    background-color: rgba(255, 255,255, .5);
   }
 }
 // .channel-edit-popup {
