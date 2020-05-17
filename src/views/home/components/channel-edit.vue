@@ -26,20 +26,24 @@
   <!-- @click="console.log(channel.id)" -->
   </van-grid-item>
 </van-grid>
-<van-cell :border="false">
-  <div slot="title">我的频道</div>
-  <div slot="label">点击添加频道</div>
-</van-cell>
-<van-grid :gutter="10">
-  <van-grid-item v-for="value in 8" :key="value" text="文字">
-
-  </van-grid-item>
-</van-grid>
+<div class="part">
+  <van-cell :border="false">
+    <div slot="title">推荐频道</div>
+    <div slot="label">点击添加频道</div>
+  </van-cell>
+  <van-grid :gutter="10" class="recommed-fixed">
+    <van-grid-item
+    v-for="(recommedChannel, index) in recommedChannels"
+    :key="index"
+    :text="recommedChannel.name">
+    </van-grid-item>
+  </van-grid>
+</div>
 </div>
 </template>
 
 <script>
-import { delCurrentChannelApi } from '@/api/channel'
+import { delCurrentChannelApi, getAllChannels } from '@/api/channel'
 export default {
   name: 'ChannelEdit',
   props: {
@@ -51,13 +55,32 @@ export default {
   components: {},
   data () {
     return {
-      isEdit: false
+      isEdit: false,
+      allChannels: []
     }
   },
-  computed: {},
+  computed: {
+    recommedChannels () {
+      // 我的频道userChannels/ 所有频道allChannels
+      // 推荐频道用计算属性，首先遍历我的频道，遍历出来的
+      // 每一项当作参数传入所有，过滤（filter）
+      return this.allChannels.filter(channnel => {
+        return !this.userChannels.find(userChannle => {
+          return userChannle.id === channnel.id
+        })
+      })
+    }
+  },
   watch: {},
-  created () {},
+  created () {
+    // 获取所有频道
+    this.loadAllchannels()
+  },
   methods: {
+    async loadAllchannels () {
+      const { data } = await getAllChannels()
+      this.allChannels = data.data.channels
+    },
     onClickItemFn (channel, index) {
       // 点击频道有两种逻辑，编辑状态下删除，完成状态下跳转至频道
       if (this.isEdit) {
@@ -88,6 +111,14 @@ export default {
 </script>
 
 <style lang='less' scoped>
+.part {
+  position: relative;
+  .recommed-fixed {
+    position: relative;
+    height: 400px;
+    overflow: auto;
+  }
+}
 /deep/ .van-grid-item__content {
   padding: 0;
   background-color: #f4f5f6;

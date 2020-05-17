@@ -62,7 +62,7 @@ export default {
         timestamp: this.timestamp || Date.now(),
         with_top: 0
       })
-      console.log(data)
+      // console.log(data)
       // this.articles = data.data.results
       const { results } = data.data
       this.articles.push(...results)
