@@ -13,3 +13,11 @@ export const getAllChannels = () => {
     url: '/app/v1_0/channels'
   })
 }
+// 批量修改（增加）用户频道列表
+export const AddUserChannels = data => {
+  return request({
+    method: 'PATCH',
+    url: '/app/v1_0/user/channels',
+    data
+  })
+}

@@ -40,6 +40,7 @@
   :user-channels="channels"
   @update-active="active = $event"
   @close="isChannelEditShow = false"
+  :active="active"
 />
 </van-popup>
 </div>
@@ -70,6 +71,9 @@ export default {
     this.loadChannels()
   },
   methods: {
+    onUpdateActive (index) {
+      this.active = index
+    },
     showPopup () {
       this.show = true
     },

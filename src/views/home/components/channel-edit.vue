@@ -22,6 +22,7 @@
     :text="channel.name"
     :icon="isEdit? 'close': ''"
     @click="onClickItemFn(channel, index)"
+    :class="{ active: index === active }"
   >
   <!-- @click="console.log(channel.id)" -->
   </van-grid-item>
@@ -35,7 +36,8 @@
     <van-grid-item
     v-for="(recommedChannel, index) in recommedChannels"
     :key="index"
-    :text="recommedChannel.name">
+    :text="recommedChannel.name"
+    @click="onAddUserChannels(recommedChannel)">
     </van-grid-item>
   </van-grid>
 </div>
@@ -43,12 +45,20 @@
 </template>
 
 <script>
-import { delCurrentChannelApi, getAllChannels } from '@/api/channel'
+import {
+  delCurrentChannelApi,
+  getAllChannels,
+  AddUserChannels
+} from '@/api/channel'
 export default {
   name: 'ChannelEdit',
   props: {
     userChannels: {
       type: Array,
+      required: true
+    },
+    active: {
+      type: Number,
       required: true
     }
   },
@@ -93,6 +103,11 @@ export default {
     async delCurrentChannel (channel, index) {
       // 登陆状态下
       // 视图删除
+      // 如果删除激活频道之前的，要改变删完之后的index
+      if (index <= this.active) {
+        this.$emit('updata-active', this.active - 1)
+        console.log(this.active - 1)
+      }
       this.userChannels.splice(index, 1)
       // 后台删除
       await delCurrentChannelApi(channel.id)
@@ -103,6 +118,19 @@ export default {
       // 关闭弹层 得在父组件中关闭
       this.$emit('update-active', index)
       this.$emit('close')
+    },
+    // 批量修改（增加）用户频道
+    async onAddUserChannels (Channel) {
+      this.userChannels.push(Channel)
+      const { data } = await AddUserChannels({
+        channels: [
+          {
+            id: Channel.id,
+            seq: this.userChannels.length
+          }
+        ]
+      })
+      console.log(data)
     }
   },
   mounted () {},
@@ -133,6 +161,11 @@ export default {
     position: absolute;
     top: -8px;
     left: 65px;
+  }
+}
+.active {
+  /deep/ .van-grid-item__text {
+    color: red;
   }
 }
 </style>
