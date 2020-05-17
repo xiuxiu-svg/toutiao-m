@@ -4,7 +4,7 @@
 <van-cell value="内容" class="nav-top">
   <template #default>
     <div class="logo"></div>
-    <van-button type="default" round class="search-btn" icon="search">搜索</van-button>
+    <van-button type="default" round class="search-btn" icon="search" to="/search">搜索</van-button>
   </template>
 </van-cell>
 <!-- /导航栏 -->
