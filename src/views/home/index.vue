@@ -50,7 +50,8 @@
 import { getchannels } from '@/api/user'
 import articleList from './components/articleList'
 import ChannelEdit from './components/channel-edit'
-
+import { getItem } from '@/utils/storage/'
+import { mapState } from 'vuex'
 export default {
   name: 'Home',
   props: {},
@@ -65,7 +66,9 @@ export default {
       isChannelEditShow: false
     }
   },
-  computed: {},
+  computed: {
+    ...mapState(['user'])
+  },
   watch: {},
   created () {
     this.loadChannels()
@@ -78,8 +81,20 @@ export default {
       this.show = true
     },
     async loadChannels () {
-      const { data: { data } } = await getchannels()
-      this.channels = data.channels
+      let channels = []
+      if (this.user) {
+        const { data: { data } } = await getchannels()
+        channels = data.channels
+      } else {
+        const localChannels = getItem('user-channels')
+        if (localChannels) {
+          channels = localChannels
+        } else {
+          const { data: { data } } = await getchannels()
+          channels = data.channels
+        }
+      }
+      this.channels = channels
     }
   },
   mounted () {},

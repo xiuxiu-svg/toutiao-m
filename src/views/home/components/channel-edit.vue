@@ -50,6 +50,8 @@ import {
   getAllChannels,
   AddUserChannels
 } from '@/api/channel'
+import { setItem } from '@/utils/storage/'
+import { mapState } from 'vuex'
 export default {
   name: 'ChannelEdit',
   props: {
@@ -70,6 +72,8 @@ export default {
     }
   },
   computed: {
+    // 拿到计算属性中的用户token
+    ...mapState(['user']),
     recommedChannels () {
       // 我的频道userChannels/ 所有频道allChannels
       // 推荐频道用计算属性，首先遍历我的频道，遍历出来的
@@ -110,8 +114,12 @@ export default {
       }
       this.userChannels.splice(index, 1)
       // 后台删除
-      await delCurrentChannelApi(channel.id)
-      // console.log(channel.id)
+      if (this.user) {
+        await delCurrentChannelApi(channel.id)
+        // console.log(channel.id)
+      } else {
+        setItem('user-channels', this.userChannels)
+      }
     },
     // 去往我的点击的频道
     toCurrentChannnel (index) {
@@ -122,15 +130,19 @@ export default {
     // 批量修改（增加）用户频道
     async onAddUserChannels (Channel) {
       this.userChannels.push(Channel)
-      const { data } = await AddUserChannels({
-        channels: [
-          {
-            id: Channel.id,
-            seq: this.userChannels.length
-          }
-        ]
-      })
-      console.log(data)
+      // 数据持久化
+      if (this.user) {
+        await AddUserChannels({
+          channels: [
+            {
+              id: Channel.id,
+              seq: this.userChannels.length
+            }
+          ]
+        })
+      } else {
+        setItem('user-channels', this.userChannels)
+      }
     }
   },
   mounted () {},
