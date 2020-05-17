@@ -31,6 +31,7 @@
   v-model="isChannelEditShow"
   position="bottom"
   closeable
+  round
   close-icon-position="top-left"
   get-container="body"
   :style="{ height: '100%' }"
