@@ -74,6 +74,12 @@ export default {
       // 后台删除
       await delCurrentChannelApi(channel.id)
       // console.log(channel.id)
+    },
+    // 去往我的点击的频道
+    toCurrentChannnel (index) {
+      // 关闭弹层 得在父组件中关闭
+      this.$emit('update-active', index)
+      this.$emit('close')
     }
   },
   mounted () {},
