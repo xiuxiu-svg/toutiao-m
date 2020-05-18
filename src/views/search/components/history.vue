@@ -10,16 +10,30 @@
     <!-- <van-icon name="delete" /> -->
   </div>
 </van-cell>
+<van-cell
+  v-for="(history, index) in searchHistories"
+  :key="index"
+>
+  <div slot="title">{{ history }}</div>
+</van-cell>
 </div>
 </template>
 
 <script>
+// import { getItem } from '@/utils/storage'
 export default {
   name: 'history',
-  props: {},
+  props: {
+    searchHistories: {
+      type: Array,
+      required: true
+    }
+  },
   components: {},
   data () {
-    return {}
+    return {
+      histories: []
+    }
   },
   computed: {},
   watch: {},

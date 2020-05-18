@@ -1,6 +1,6 @@
 <template>
 <div class="search-suggest">
-<van-cell v-for="(suggest, index) in suggestList" :key="index" icon="search">
+<van-cell v-for="(suggest, index) in suggestList" :key="index" icon="search" @click="search(suggest)">
   <!-- <div slot="tittle">111</div> -->
   <template #title>
     <span v-html="highlight(suggest)"></span>
@@ -47,6 +47,9 @@ export default {
         new RegExp(this.searchText, 'gi'),
         `<span style="color: red">${this.searchText}</span>`
       )
+    },
+    search (suggest) {
+      this.$emit('search', 'suggest')
     }
   },
   mounted () {},
