@@ -1,6 +1,11 @@
 <template>
 <div class="search-suggest">
-<van-cell :title="suggest" v-for="(suggest, index) in suggestList" :key="index" />
+<van-cell v-for="(suggest, index) in suggestList" :key="index" icon="search">
+  <!-- <div slot="tittle">111</div> -->
+  <template #title>
+    <span v-html="highlight(suggest)"></span>
+  </template>
+</van-cell>
 </div>
 </template>
 
@@ -35,7 +40,15 @@ export default {
     }
   },
   created () {},
-  methods: {},
+  methods: {
+    highlight (suggest) {
+      return suggest.replace(
+        // 一般正则表达式不满足用构造函数的方法，g全局，i忽略大小写
+        new RegExp(this.searchText, 'gi'),
+        `<span style="color: red">${this.searchText}</span>`
+      )
+    }
+  },
   mounted () {},
   beforeDestroy () {}
 }
