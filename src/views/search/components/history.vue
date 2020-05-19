@@ -2,25 +2,30 @@
 <div class="search-history">
 <van-cell title="历史记录">
   <div slot="default">
-    <div>
-      <span>全部删除</span>
+    <van-icon name="delete" v-if="isShowdelHistory" @click="change"/>
+    <div v-else>
+      <span @click="delAll">全部删除</span>
       &nbsp;&nbsp;
-      <span>完成</span>
+      <span @click="isShowdelHistory = !isShowdelHistory">完成</span>
     </div>
-    <!-- <van-icon name="delete" /> -->
   </div>
 </van-cell>
 <van-cell
   v-for="(history, index) in searchHistories"
   :key="index"
+  @click="delHistory(history, index)"
 >
   <div slot="title">{{ history }}</div>
+  <van-icon
+    name="close"
+    v-show="!isShowdelHistory"
+  ></van-icon>
 </van-cell>
 </div>
 </template>
 
 <script>
-// import { getItem } from '@/utils/storage'
+import { delAllHistories } from '@/api/search'
 export default {
   name: 'history',
   props: {
@@ -32,13 +37,30 @@ export default {
   components: {},
   data () {
     return {
-      histories: []
+      histories: [],
+      isShowdelHistory: true
     }
   },
   computed: {},
   watch: {},
   created () {},
-  methods: {},
+  methods: {
+    change () {
+      this.isShowdelHistory = false
+    },
+    async delAll () {
+      console.log(1)
+      await delAllHistories()
+      this.$emit('update-history', [])
+    },
+    delHistory (history, index) {
+      if (!this.isShowdelHistory) {
+        this.searchHistories.splice(index, 1)
+        return
+      }
+      this.$emit('search', 'history')
+    }
+  },
   mounted () {},
   beforeDestroy () {}
 }

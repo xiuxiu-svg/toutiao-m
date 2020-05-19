@@ -21,7 +21,12 @@
 />
 <!-- /查询建议 -->
 <!-- 历史记录 -->
-<history v-else :searchHistories="searchHistories"/>
+<history
+  v-else
+  :searchHistories="searchHistories"
+  @updateHistory="searchHistories = $event"
+  @search="onSearch"
+/>
 <!-- /历史记录 -->
 </div>
 </template>
@@ -31,7 +36,7 @@ import history from './components/history'
 import results from './components/results'
 import suggest from './components/suggest'
 import { getResults } from '@/api/search'
-import { setItem } from '@/utils/storage'
+import { setItem, getItem } from '@/utils/storage'
 export default {
   name: 'SearchIndex',
   props: {},
@@ -53,19 +58,32 @@ export default {
     // 当搜索关键词发生改变，显示查询组件
     searchText () {
       this.isShow = false
+    },
+    searchHistories () {
+      setItem('localSearch', this.searchHistories)
     }
   },
-  created () {},
+  created () {
+    this.loadHistory()
+  },
   methods: {
-    async onSearch (val) {
+    async onSearch (searchText) {
       this.isShow = true
-      this.searchHistories.unshift(this.searchText)
-      setItem('localSearch', this.searchHistories)
+      // 保存不重复的搜索记录
+      this.searchText = searchText
+      const index = this.searchHistories.indexOf(searchText)
+      if (index !== -1) {
+        this.searchHistories.splice(index, 1)
+      }
+      this.searchHistories.unshift(searchText)
       const { data } = await getResults({
         q: this.searchText
       })
       console.log(data)
       this.results = data.data.results
+    },
+    async loadHistory () {
+      this.searchHistories = getItem('localSearch')
     }
   },
   mounted () {},

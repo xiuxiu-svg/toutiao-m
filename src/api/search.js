@@ -16,3 +16,10 @@ export const getResults = params => {
     params
   })
 }
+// 删除线上所有历史记录
+export const delAllHistories = () => {
+  return request({
+    method: 'DELETE',
+    url: '/app/v1_0/search/histories'
+  })
+}

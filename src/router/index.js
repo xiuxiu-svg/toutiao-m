@@ -9,6 +9,7 @@ const routes = [
     name: 'Login',
     component: () => import('@/views/login')
   },
+  // home
   {
     path: '/',
     name: '',
@@ -36,10 +37,19 @@ const routes = [
       }
     ]
   },
+  // search
   {
     path: '/search',
     name: 'SearchIndex',
     component: () => import('@/views/search')
+  },
+  // article 动态路由参数，使用props将组建与路由解耦
+  {
+    path: '/article/:articleId',
+    name: 'article',
+    component: () => import('@/views/article'),
+    // 将路径参数映射到本地
+    props: true
   }
 ]
 
