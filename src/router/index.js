@@ -45,9 +45,9 @@ const routes = [
   },
   // article 动态路由参数，使用props将组建与路由解耦
   {
-    path: '/article/:articleId',
-    name: 'article',
-    component: () => import('@/views/article'),
+    path: '/article/:artId',
+    name: 'articles',
+    component: () => import('@/views/articles'),
     // 将路径参数映射到本地
     props: true
   }

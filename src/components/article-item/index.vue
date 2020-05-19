@@ -3,9 +3,9 @@
   <van-cell
     class="article-item"
     :to="{
-      name: 'article',
+      name: 'articles',
       params: {
-        articleId: article.art_id
+        artId: article.art_id
       }
     }"
   >
