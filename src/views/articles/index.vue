@@ -19,7 +19,7 @@
     <van-button type="default">取消关注</van-button>
   </van-cell>
   <van-cell>
-    <p>{{ article.content }}</p>
+    <p v-html="article.content" class="markdown-body"></p>
     <van-divider
       :style="{ color: '#1989fa', borderColor: '#1989fa', padding: '0 16px' }"
     >
@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import './github-markdown.css'
 import { getArticle } from '@/api/article'
 export default {
   name: 'articles',
@@ -81,6 +82,10 @@ export default {
 </script>
 
 <style lang='less' scoped>
+.markdown-body {
+  padding: 14px;
+  background-color: #fff;
+}
 .nav-title {
   background-color: #3196fa;
   /deep/ .van-icon {
