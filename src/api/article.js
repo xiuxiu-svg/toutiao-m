@@ -7,3 +7,10 @@ export const getArticles = params => {
     params
   })
 }
+// 封装单个文章详情
+export const getArticle = artId => {
+  return request({
+    method: 'GET',
+    url: `/app/v1_0/articles/${artId}`
+  })
+}
